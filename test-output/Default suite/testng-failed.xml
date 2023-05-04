@@ -6,7 +6,10 @@
       <class name="api.test.Tests">
         <methods>
           <include name="testPostUser" invocation-numbers="0"/>
+          <include name="testPutRequest"/>
+          <include name="testDeleteRequest"/>
           <include name="setupData"/>
+          <include name="testGetRequest"/>
         </methods>
       </class> <!-- api.test.Tests -->
     </classes>
