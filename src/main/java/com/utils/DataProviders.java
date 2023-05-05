@@ -5,12 +5,22 @@ import java.io.IOException;
 import org.testng.annotations.DataProvider;
 
 public class DataProviders {
+	
+	ExcelUtility xl;
 
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	@DataProvider(name = "Data")
-	public String[][] getAllData() throws IOException {
+	public String[][] getAllData() {
+		try {
 		String path = System.getProperty("user.dir")+"/testdata/userdata.xlsx";
-		ExcelUtility xl=new ExcelUtility(path);
-		
+		xl = new ExcelUtility(path);
+		} catch (Exception e) {
+			
+		}
 		int rowNum = xl.getRowCount("Sheet1");
 		int colCount = xl.getCellCount("Sheet1", 1);
 		

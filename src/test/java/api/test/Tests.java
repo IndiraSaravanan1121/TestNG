@@ -1,7 +1,6 @@
 package api.test;
 
-import java.io.IOException;
-
+import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -10,7 +9,6 @@ import org.testng.annotations.Test;
 
 import com.utils.DataProviders;
 
-import api.endpoints.StatusCode;
 import api.endpoints.UserEndPoints;
 import api.payload.TestData;
 import io.restassured.response.Response;
@@ -19,7 +17,8 @@ public class Tests {
 
 	TestData data;	
 	public Logger logger;
-
+	UserEndPoints userEndPoints;
+	
 	@BeforeClass
 	public void setupData() {
 		logger =  LogManager.getLogger(this.getClass());
@@ -27,48 +26,44 @@ public class Tests {
 	}
 
 	@Test(priority = 1)
-	public void testGetRequest() throws IOException {
-		Response response = UserEndPoints.readUser();
+	public void testGetRequest() {
+		Response response = userEndPoints.readUser();
 		response.then().log().all();
-
-		Assert.assertEquals(response.statusCode(), StatusCode.StatusCode_OK);
+		
+		Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 		logger = LogManager.getLogger(this.getClass());
-		logger.info("Get Request Completed");
 	}
 
 	@Test(dataProvider="Data",dataProviderClass = DataProviders.class)
-	public void testPostUser(String name, String job) throws IOException {
+	public void testPostUser(String name, String job) {
 		TestData testData = new TestData();
 		testData.setName(name);
 		testData.setJob(job);
 
-		Response response = UserEndPoints.createNewUser(testData);
+		Response response = userEndPoints.createNewUser(testData);
 		response.then().log().all();
 		
-		Assert.assertEquals(response.statusCode(), StatusCode.StatusCode_CREATED);
+		Assert.assertEquals(response.statusCode(), HttpStatus.SC_CREATED);
 		logger.info("Post Request Completed");
 	}
 
 	@Test(priority=3)
-	public void testPutRequest() throws IOException {
+	public void testPutRequest() {
 
-		Response response = UserEndPoints.updateUser();
+		Response response = userEndPoints.updateUser();
 		response.then().log().all();
 
-		Assert.assertEquals(response.statusCode(), StatusCode.StatusCode_OK);
+		Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 		logger.info("Put Request Completed");
 	}
 
 	@Test(priority = 4)
-	public void testDeleteRequest() throws IOException {
+	public void testDeleteRequest() {
 		
-		Response response = UserEndPoints.deleteUser();
+		Response response = userEndPoints.deleteUser();
 		response.then().log().all();
 
-		Assert.assertEquals(response.statusCode(), StatusCode.StatusCode_NOCONTENT);
+		Assert.assertEquals(response.statusCode(), HttpStatus.SC_NO_CONTENT);
 		logger.info("Delete Request Completed");
 	}
-	
-	
-
 }

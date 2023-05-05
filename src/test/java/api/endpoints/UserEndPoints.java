@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.*;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 import org.json.JSONObject;
@@ -15,59 +14,72 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 public class UserEndPoints {
+	
+	JSONObject data;
 
-	static ResourceBundle getURL()
-	{
+	/**
+	 * This Method is to read data from properties file
+	 * @return
+	 */
+	public ResourceBundle getURL() {
 		ResourceBundle routes = ResourceBundle.getBundle("config");
 		return routes;
 	}
-	
-	Routes route = new Routes();
 
-	public static Response createNewUser(TestData payload) throws IOException {
-		
+	/**
+	 * This Method will take Post URL and send the post request and return the response
+	 * @param payload
+	 * @return
+	 */
+	public Response createNewUser(TestData payload) {
+
 		String post_url = getURL().getString("post_url");
-		Response response = given()
-			.contentType(ContentType.JSON)
-			.accept(ContentType.JSON)
-			.body(payload)
-	    .when()
-	    	.post(post_url);
-		return response;	
-	}	
+		Response response = given().contentType(ContentType.JSON).accept(ContentType.JSON).body(payload).when()
+				.post(post_url);
+		return response;
+	}
 
-	public static Response readUser() throws IOException {
+	/**
+	 * This Method will take Get URL and send the get request and return the response
+	 * @return
+	 */
+	public Response readUser() {
 		String get_url = getURL().getString("get_url");
 
-		Response response = when()
-		.get(get_url);
-	return response;
+		Response response = when().get(get_url);
+		return response;
 	}
-	
-	public static Response updateUser() throws IOException {
+
+	/**
+	 * This Method will take Put URL and send the put request and return the response
+	 * @return
+	 */
+	public Response updateUser() {
 		String put_url = getURL().getString("put_url");
-
-		  File f = new File(".\\body.json");	
-			FileReader fr = new FileReader(f);		
+		try {
+			File f = new File(".\\body.json");
+			FileReader fr = new FileReader(f);
 			JSONTokener jt = new JSONTokener(fr);
-			JSONObject data = new JSONObject(jt);
-		Response response = given()
-		.contentType(ContentType.JSON)
-		.accept(ContentType.JSON)
-		.body(data)
-	.when()
-		.put(put_url);
-	return response;	
+			 data = new JSONObject(jt);
+		} catch (Exception e) {
+			System.out.println("File not Found");
+		}
+		Response response = given().contentType(ContentType.JSON).accept(ContentType.JSON).body(data).when()
+				.put(put_url);
+		return response;
 
 	}
 
-	public static Response deleteUser() throws IOException {
+	/**
+	 * This Method will take Delete URL and send the delete request and return the response
+	 * @return
+	 */
+	public Response deleteUser() {
 		String delete_url = getURL().getString("delete_url");
 
-		Response response = when().
-			delete(delete_url);
+		Response response = when().delete(delete_url);
 
-     return response;
+		return response;
 	}
 
 }
